@@ -1,23 +1,27 @@
-.main{
-    width:100vw;
-    height:100vh;
-    display:flex;
-    align-self: center;
-    align-items: center;
-    justify-content: center;
+.main {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-self: center;
+	align-items: center;
+	justify-content: center;
 }
-.App{
-    width:30vw;
-    height:70vh;
-    display:flex;
-    border-radius: 10px;
-    background-color: rgb(181, 113, 244);
+.App {
+	width: 30vw;
+	height: 70vh;
+	display: flex;
+	border-radius: 10px;
+	background-color: rgb(181, 113, 244);
 }
-.Rows{
-    align-items: center;
-    justify-content: center;
+.Rows {
+	align-items: center;
+	justify-content: center;
 }
-.todo{
-    align-items: center;
-    justify-content: center;
+.todo {
+	align-items: center;
+	justify-content: center;
+}
+.task-list-container {
+	max-height: 400px; /* Adjust the height as needed */
+	overflow-y: auto; /* Enable vertical scrolling */
 }

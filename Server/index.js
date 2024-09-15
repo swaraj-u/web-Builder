@@ -4,15 +4,16 @@ const dotenv= require('dotenv');
 const connectDB = require('./config/db');
 const { Server } = require("socket.io");
 const cors = require("cors");
+const Task = require("./models/Task");
+const mongoose = require("mongoose");
 
 dotenv.config();
 connectDB();
 
 const app=express();
-app.use(cors());
-
 //Creating http server using express
 const server = http.createServer(app);
+
 
 //Setting up socket.io with cors
 const io = new Server(server, {
@@ -22,11 +23,33 @@ const io = new Server(server, {
     },
 });
 
+// mongoose.connect(process.env.MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// }).then(() => console.log("MongoDB connected"))
+//   .catch(err => console.log(err));
+
+
+
 io.on("connection", (socket) => {
     console.log(`user connected ${socket.id}`);
 
-    socket.on("addTask", (data) => {
-        socket.broadcast.emit("receiveTask", data );
+    // const task = 'hel'; 
+// socket.emit('addTask', { task });
+    // Send existing tasks when a new client connects
+    Task.find().then((tasks) => {
+        socket.emit("allTasks", tasks);
+    });
+
+    // Listen for "addTask" event
+    socket.on("addTask", async (data) => {
+        const newTask = new Task({ task: data.task });
+        await newTask.save(); // Save task to database
+
+        // Broadcast the new task to all clients
+        Task.find().then((tasks) => {
+            io.emit("allTasks", tasks); // Emit all tasks to all clients
+        });
     });
 
 
