@@ -32,6 +32,9 @@ function Navigation() {
                         <LinkContainer to="/chat">
                             <Nav.Link>Chat</Nav.Link>
                         </LinkContainer>
+                        <LinkContainer to="/todo">
+                            <Nav.Link>Task Manager</Nav.Link>
+                        </LinkContainer>
                         {user && (
                             <NavDropdown
                                 title={

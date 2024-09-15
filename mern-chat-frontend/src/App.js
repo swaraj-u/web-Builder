@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Chat from "./pages/Chat";
+import Todo from "./pages/todo";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { AppContext, socket } from "./context/appContext";
@@ -31,6 +32,7 @@ function App() {
                         </>
                     )}
                     <Route path="/chat" element={<Chat />} />
+                    <Route path="/todo" element={<Todo socket={socket} />} />
                 </Routes>
             </BrowserRouter>
         </AppContext.Provider>

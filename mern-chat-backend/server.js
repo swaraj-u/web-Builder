@@ -1,10 +1,13 @@
 const express = require('express');
+const dotenv= require('dotenv');
+const Task = require("./models/Task");
 const app = express();
 const userRoutes = require('./routes/userRoutes')
 const User = require('./models/User');
 const Message = require('./models/Message')
 const rooms = ['general', 'tech', 'finance', 'crypto'];
 const cors = require('cors');
+dotenv.config();
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -84,8 +87,34 @@ io.on('connection', (socket)=> {
       res.status(400).send()
     }
   })
+  //harshit branch integration
 
-})
+  Task.find().then((tasks) => {
+    socket.emit("allTasks", tasks);
+});
+
+
+// Listen for "addTask" event
+socket.on("addTask", async (data) => {
+    const newTask = new Task({ task: data.task });
+    await newTask.save(); // Save task to database
+
+    // Broadcast the new task to all clients
+
+    Task.find().then((tasks) => {
+      io.emit("allTasks", tasks); // Emit all tasks to all clients
+  });
+});
+    socket.on('deleteTask', (taskId) => {
+      Task.findByIdAndDelete(taskId).then(() => {
+        Task.find().then((tasks) => {
+          io.emit('allTasks', tasks);
+        });
+      });
+    });
+});
+
+
 
 
 app.get('/rooms', (req, res)=> {
