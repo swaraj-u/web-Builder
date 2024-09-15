@@ -90,12 +90,14 @@ const Todo = ({ socket }) => {
 	const { Title } = Typography;
 	const screen = Grid.useBreakpoint();
 	const [task, setTask] = useState("");
+	const [deadline,setDeadline] = useState(null);
 	const [taskList, setTaskList] = useState([]);
 
 	const addTask = () => {
 		if (task.trim()) {
-			socket.emit("addTask", { task });
+			socket.emit("addTask", { task,deadline });
 			setTask("");
+			setDeadline(null);
 		}
 	};
 
@@ -123,14 +125,25 @@ const Todo = ({ socket }) => {
 					</Row>
 					<Row xs={12} md={12} className="Rows" gutter={12}>
 						<Col xs={16} md={16} className="Cols">
-							<Input
+							<Row>
+							<label>Task: </label><br></br>
+								<Input
 								className="search"
 								placeholder="Task"
 								value={task}
 								onChange={(event) => setTask(event.target.value)}
 							/>
-						</Col>
-						<Col xs={6} md={6} className="Cols">
+							</Row>
+							<Row>
+								<label>Deadline: </label><br></br>
+							<Input
+							 	type="date"
+								className="search"
+								value={deadline}
+								onChange={(event) => setDeadline(event.target.value)}
+							/>
+							</Row>
+							<Row>
 							<Button
 								onClick={addTask}
 								style={{
@@ -144,6 +157,7 @@ const Todo = ({ socket }) => {
 							>
 								Add Task
 							</Button>
+							</Row>
 						</Col>
 					</Row>
 					<Row className="todo">
@@ -153,6 +167,8 @@ const Todo = ({ socket }) => {
 							{taskList.map((item) => (
 								<Row span={24} key={item._id} gutter={12} justify={"space-between"}>
 									<Col>{item.task}</Col>
+								
+									<Col>{new Date(item.deadline).toLocaleDateString() }</Col><br></br>
 									<Col>
 										<Button
 											className="complete"
@@ -161,7 +177,7 @@ const Todo = ({ socket }) => {
 										>
 											<CheckCircleOutlined />
 										</Button>
-									</Col>
+									</Col><br></br>
 								</Row>
 							))}
 						</Col>
